@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.lyh.mapper.CourseContentMapper">
+
+    <resultMap id="sectionAndLessonByCourseIdMap" type="org.lyh.bean.CourseSection">
+        <id property="id" column="id"/>
+        <result property="courseId" column="course_id"/>
+        <result property="sectionName" column="section_name"/>
+        <result property="description" column="description"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="isDe" column="is_de"/>
+        <result property="orderNum" column="order_num"/>
+
+        <collection property="lessonList" ofType="org.lyh.bean.CourseLesson">
+            <id property="id" column="lesson_id"/>
+            <result property="courseId" column="course_id"/>
+            <result property="sectionId" column="section_id"/>
+            <result property="theme" column="theme"/>
+            <result property="duration" column="duration"/>
+            <result property="isFree" column="is_free"/>
+            <result property="orderNum" column="order_num"/>
+            <result property="status" column="status"/>
+        </collection>
+    </resultMap>
+    <!--根据课程id查询章节信息及课时信息-->
+    <select id="findSectionAndLessonByCourseId" parameterType="int" resultMap="sectionAndLessonByCourseIdMap">
+         SELECT  cs.*,
+                  cl.id lesson_id,
+                  cl.course_id,
+                  cl.section_id,
+                  cl.theme,
+                  cl.duration,
+                  cl.create_time,
+                  cl.update_time,
+                  cl.is_del,
+                  cl.order_num,
+                  cl.status
+                FROM course_section cs
+                  LEFT JOIN course_lesson cl
+                    ON cl.section_id = cs.id
+                WHERE cs.course_id = #{courseId}
+        ORDER BY cs.order_num
+    </select>
+
+<!--更新章节信息-->
+    <update id="updateSession" parameterType="org.lyh.bean.CourseSection">
+        UPDATE course_section
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sectionName != null and sectionName != ''">
+                section_name = #{sectionName},
+            </if>
+
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+
+            <if test="orderNum != null and orderNum != '' or orderNum == 0">
+                order_num = #{orderNum},
+            </if>
+
+            <if test="updateTime != null">
+                update_time=#{updateTime},
+            </if>
+        </trim>
+        <where>
+            <if test="id != null and id != '' ">id = #{id}</if>
+        </where>
+    </update>
+</mapper>

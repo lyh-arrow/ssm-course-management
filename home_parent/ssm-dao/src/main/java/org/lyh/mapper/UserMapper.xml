@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.lyh.mapper.UserMapper">
+
+    <!--用户分页及多条件查询-->
+    <select id="findAllUserByPage" parameterType="org.lyh.bean.UserVo" resultType="org.lyh.bean.User" >
+        select * from user
+        <where>
+            <if test="true">
+                and is_del !=1
+            </if>
+            <if test="username !=null and username !=''">
+                and name = #{username}
+            </if>
+            <if test="startCreateTime !=null and endCreateTime !=null">
+                and create_time BETWEEN #{startCreateTime} AND #{endCreateTime}
+            </if>
+        </where>
+    </select>
+
+    <!--根据用户ID查询关联的角色信息-->
+    <select id="findUserRoleById" resultType="org.lyh.bean.Role" parameterType="int">
+        SELECT * FROM roles r INNER JOIN user_role_relation ur ON r.id = ur.role_id WHERE ur.user_id = #{userId}
+    </select>
+
+    <!--根据角色ID，查询角色所拥有的顶级菜单（-1）-->
+    <select id="findParentMenuByRoleId" parameterType="java.util.List" resultType="org.lyh.bean.Menu">
+        SELECT
+        DISTINCT m.*
+        FROM
+        roles r INNER JOIN role_menu_relation rm ON r.id = rm.role_id
+        INNER JOIN menu m ON m.id =rm.menu_id
+        WHERE
+        m.parent_id = -1 AND r.id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+
+    </select>
+
+    <!--根据PID，查询子菜单信息-->
+    <select id="findSubMenuByPid" parameterType="int" resultType="org.lyh.bean.Menu">
+         SELECT * FROM menu WHERE parent_id = #{pid}
+    </select>
+
+
+    <!--获取用户拥有的资源权限信息-->
+    <select id="findResourceByRoleId" parameterType="java.util.List" resultType="org.lyh.bean.Resource">
+        SELECT
+        DISTINCT r.*
+        FROM
+        resource r INNER JOIN role_resource_relation rr ON r.id = rr.resource_id
+        INNER JOIN roles ro ON ro.id = rr.role_id
+        WHERE ro.id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>
