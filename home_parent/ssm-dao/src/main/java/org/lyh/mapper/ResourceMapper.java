@@ -9,4 +9,5 @@ public interface ResourceMapper {
 
     // 资源信息分页&条件查询
     List<Resource> findAllResource(ResourceVo resourceVo);
+
 }

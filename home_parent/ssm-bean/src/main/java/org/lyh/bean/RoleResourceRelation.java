@@ -1,28 +1,16 @@
 package org.lyh.bean;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-
-public class ResourceCategory {
+public class RoleResourceRelation {
 
     private Integer id;
-    private String name;
-    private Integer sort;
+    private Integer resourceId;
+    private Integer roleId;
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
     private String createdBy;
     private String updatedBy;
-
-    private List<Resource> resourceList;
-
-    public List<Resource> getResourceList() {
-        return resourceList;
-    }
-
-    public void setResourceList(List<Resource> resourceList) {
-        this.resourceList = resourceList;
-    }
 
     public Integer getId() {
         return id;
@@ -32,20 +20,20 @@ public class ResourceCategory {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getResourceId() {
+        return resourceId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setResourceId(Integer resourceId) {
+        this.resourceId = resourceId;
     }
 
-    public Integer getSort() {
-        return sort;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setSort(Integer sort) {
-        this.sort = sort;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     public LocalDateTime getCreatedTime() {

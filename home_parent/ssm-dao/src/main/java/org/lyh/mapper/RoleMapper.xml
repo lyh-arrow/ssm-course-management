@@ -23,4 +23,25 @@
         insert into role_menu_relation values(null,#{menuId},#{roleId},#{createdTime},#{updatedTime},#{createdBy},#{updatedby})
     </insert>
 
+    <!--根据角色id查询相关联的资源信息-->
+    <select id="findResourceListByRoleId" parameterType="int" resultType="org.lyh.bean.Resource">
+        SELECT rs.id id,rs.name NAME,rs.url url,rs.category_id category_id,rs.created_time created_time, rs.updated_time updated_time
+        FROM  role_resource_relation r LEFT JOIN resource rs ON r.resource_id=rs.id WHERE r.role_id=#{roleId}
+
+    </select>
+
+    <!--根据资源角色id查询相关的资源信息-->
+    <select id="findResourceCategoryListByResourceId" parameterType="int" resultType="org.lyh.bean.ResourceCategory">
+        SELECT DISTINCT rc.id id,rc.name NAME,rc.sort sort,rc.created_time created_time,rc.updated_time updated_time,rc.created_by created_by,rc.updated_by
+	    FROM resource_category rc
+	    INNER JOIN resource r ON  rc.id=r.category_id
+	    INNER JOIN role_resource_relation rr ON rr.resource_id=r.id
+	    WHERE rr.role_id=#{roleId}
+    </select>
+
+    <!--分配资源-->
+    <insert id="roleContextResource" parameterType="org.lyh.bean.RoleResourceRelation">
+        insert into role_resource_relation values (null,#{resourceId},#{roleId},#{createdTime},#{updatedTime},#{createdBy},#{updatedBy})
+    </insert>
+
 </mapper>

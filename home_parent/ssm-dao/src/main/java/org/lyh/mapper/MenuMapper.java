@@ -14,7 +14,7 @@ public interface MenuMapper {
     @Select("select * from menu")
     List<Menu> findAllMenu();
 
-    //更加菜单id查询菜单
+    //根据菜单id查询菜单
     @Select("select * from menu where id = #{id}")
     Menu findMenuById(Integer id);
 }

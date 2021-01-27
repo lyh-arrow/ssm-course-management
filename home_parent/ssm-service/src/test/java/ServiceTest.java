@@ -1,10 +1,7 @@
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.lyh.bean.*;
-import org.lyh.service.CourseContentService;
-import org.lyh.service.CourseService;
-import org.lyh.service.PromotionAdService;
-import org.lyh.service.UserService;
+import org.lyh.service.*;
 import org.lyh.utils.Md5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,11 +26,13 @@ public class ServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RoleService roleService;
+
 
     @Test
     public void test() throws Exception {
-        ResponseResult userPermissions = userService.getUserPermissions(100030012);
-
+        List<ResourceCategory> resourceListByRoleId = roleService.findResourceListByRoleId(1);
 
     }
 }

@@ -1,9 +1,6 @@
 package org.lyh.controller;
 
-import org.lyh.bean.Menu;
-import org.lyh.bean.ResponseResult;
-import org.lyh.bean.Role;
-import org.lyh.bean.RoleMenuVo;
+import org.lyh.bean.*;
 import org.lyh.service.MenuService;
 import org.lyh.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +55,20 @@ public class RoleController {
     public ResponseResult deleteRole(@PathVariable("id") Integer id){
         roleService.deleteRole(id);
         return new ResponseResult(true,200,"删除角色成功",null);
+    }
+
+    //根据角色id显示该角色所拥有的资源
+    @GetMapping("/findResourceListByRoleId/{roleId}")
+    public ResponseResult findResourceListByRoleId(@PathVariable("roleId") Integer roleId){
+        List<ResourceCategory> resourceList = roleService.findResourceListByRoleId(roleId);
+        return new ResponseResult(true,200,"响应成功",resourceList);
+    }
+    
+    //为角色分配资源
+    @PostMapping("/roleContextResource")
+    public ResponseResult roleContextResource(@RequestBody RoleResourceVo roleResourceVo){
+        roleService.roleContextResource(roleResourceVo);
+        return new ResponseResult(true,200,"分配资源成功",null);
     }
 
 
